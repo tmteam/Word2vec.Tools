@@ -1,5 +1,11 @@
-# Word2vec.Tools
+# Word2vec.Tools#
 .Net Implementation for those who wants to use google word2vec tools in theirs .net solutions
+
+To install Word2Vec .Net Tools, run the following command in the Package Manager Console:
+
+```
+PM> Install-Package Word2vec.Tools 
+```
 
 ## What is the word2vec?
 
