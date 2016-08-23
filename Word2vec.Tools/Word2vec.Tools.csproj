@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Experiments.cs" />
     <Compile Include="IWord2VecReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Representation.cs" />

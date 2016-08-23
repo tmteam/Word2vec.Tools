@@ -22,7 +22,8 @@ namespace Word2vec.Tools
             {
                 if (representation.NumericVector.Length != vectorDimensionsCount)
                     throw new ArgumentException("representations.Vector.Length");
-                _dictioanary.Add(representation.Word, representation);
+                if (!string.IsNullOrWhiteSpace(representation.Word) && !_dictioanary.ContainsKey(representation.Word))
+                    _dictioanary.Add(representation.Word, representation);
             }
             Words = _dictioanary.Values.ToArray();
         }

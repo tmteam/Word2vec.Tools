@@ -263,3 +263,5 @@ paket-files/
 .idea/
 *.sln.iml
 
+*.nuspec
+*.exe

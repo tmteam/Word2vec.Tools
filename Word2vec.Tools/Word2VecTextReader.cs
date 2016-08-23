@@ -23,9 +23,10 @@ namespace Word2vec.Tools
                 while (!strStream.EndOfStream)
                 {
                     var line = strStream.ReadLine().Split(' ');
+                    var vecs = line.Skip(1).Take(vectorSize).ToArray();
                     vectors.Add(new WordRepresentation(
                        word: line.First(),
-                       vector: line.Skip(1).Select(Single.Parse).ToArray()));
+                       vector: vecs.Select(v=>Single.Parse(v, System.Globalization.CultureInfo.InvariantCulture)).ToArray()));
                 }
                 return new Vocabulary(vectors, vectorSize);
             }

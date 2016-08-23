@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("word2vec")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("word2vec.tools")]
+[assembly: AssemblyDescription(".Net Implementation for those who wants to use google word2vec tools in theirs .net solutions")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("rspk")]
 [assembly: AssemblyProduct("word2vec")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]

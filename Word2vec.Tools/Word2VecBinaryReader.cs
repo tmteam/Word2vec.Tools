@@ -34,7 +34,7 @@ namespace Word2vec.Tools
             var buffer = new List<byte>();
             var ans = new List<WordRepresentation>();
 
-            while (readerSream.BaseStream.Position < readerSream.BaseStream.Length - 1)
+            while (readerSream.BaseStream.Position < readerSream.BaseStream.Length - vectorSize * sizeof(float))
                 ans.Add(ReadRepresentation(readerSream, buffer, vectorSize));
 
             return new Vocabulary(ans, vectorSize);
