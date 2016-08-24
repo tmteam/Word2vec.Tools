@@ -34,6 +34,10 @@ namespace Word2vec.Tools.Example
             
             Console.WriteLine("top "+count+" closest to \""+ boy+"\" words:");
             var closest = vocabulary.Distance(boy, count);
+
+            /* Is simmilar to:
+            * var closest = vocabulary[boy].GetClosestFrom(vocabulary.Words.Where(w => w != vocabulary[boy]), count);
+            */ 
             foreach (var neightboor in closest)
                 Console.WriteLine(neightboor.Representation.Word + "\t\t" + neightboor.Distance);
             #endregion

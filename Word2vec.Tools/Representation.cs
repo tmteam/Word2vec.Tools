@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Word2vec.Tools
@@ -44,6 +45,13 @@ namespace Word2vec.Tools
                 ans[i] = NumericVector[i] + representation.NumericVector[i];
             
             return new Representation(ans);
+        }
+        public WordDistance[] GetClosestFrom(IEnumerable<WordRepresentation> representations, int maxCount)
+        {
+            return representations.Select(GetCosineDistanceToWord)
+               .OrderByDescending(s => s.Distance)
+               .Take(maxCount)
+               .ToArray();
         }
     }
 }
