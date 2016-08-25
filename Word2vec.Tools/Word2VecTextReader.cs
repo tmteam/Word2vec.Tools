@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -20,13 +21,17 @@ namespace Word2vec.Tools
 
                 var vectors = new List<WordRepresentation>(vocabularySize);
 
+                var enUsCulture = CultureInfo.GetCultureInfo("en-US");
                 while (!strStream.EndOfStream)
                 {
                     var line = strStream.ReadLine().Split(' ');
                     var vecs = line.Skip(1).Take(vectorSize).ToArray();
+                    if (vecs.Length != vectorSize)
+                        throw new FormatException("word \"" + line.First() + "\" has wrong vector size of " + vecs.Length);
+                    
                     vectors.Add(new WordRepresentation(
                        word: line.First(),
-                       vector: vecs.Select(v=>Single.Parse(v, System.Globalization.CultureInfo.InvariantCulture)).ToArray()));
+                       vector: vecs.Select(v => Single.Parse(v, enUsCulture)).ToArray()));
                 }
                 return new Vocabulary(vectors, vectorSize);
             }
