@@ -66,7 +66,7 @@ namespace Word2vec.Tools.Example
 
             #region subtraction
              Console.WriteLine("\"girl\" - \"boy\" = ...");
-             var subtractionRepresentation = vocabulary["girl"].Add(vocabulary["boy"]);
+             var subtractionRepresentation = vocabulary["girl"].Substract(vocabulary["boy"]);
              var closestSubtractions = vocabulary.Distance(subtractionRepresentation, count);
              foreach (var neightboor in closestSubtractions)
                  Console.WriteLine(neightboor.Representation.Word + "\t\t" + neightboor.Distance);
