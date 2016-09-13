@@ -15,16 +15,40 @@ namespace Word2vec.Tools
         {
             using (var strStream = new System.IO.StreamReader(inputStream))
             {
-                var firstLine = strStream.ReadLine().Split(' ');
-                var vocabularySize = int.Parse(firstLine[0]);
-                var vectorSize = int.Parse(firstLine[1]);
+                bool isFirstLine = true;
+                int vocabularySize = 0;
+                int vectorSize = -1;
 
-                var vectors = new List<WordRepresentation>(vocabularySize);
+                //var firstLine = strStream.ReadLine().Split(' ');
+
+                var vectors = new List<WordRepresentation>();
 
                 var enUsCulture = CultureInfo.GetCultureInfo("en-US");
                 while (!strStream.EndOfStream)
                 {
                     var line = strStream.ReadLine().Split(' ');
+                    if (isFirstLine) {
+                        if (line.Length == 2) {
+                            try {
+                                //header
+                                vocabularySize = int.Parse(line[0]);
+                                vectorSize = int.Parse(line[1]);
+                                vectors = new List<WordRepresentation>(vocabularySize);
+                                continue; 
+                            } catch {
+                                vocabularySize = 0;
+                                vectorSize = -1;
+                            }
+                        }
+
+                        if (vectorSize == -1) {
+                            // no header, so require all other vectors to match first line's length
+                            vectorSize = line.Length - 1;
+                        }
+
+                        isFirstLine = false;
+                    }
+
                     var vecs = line.Skip(1).Take(vectorSize).ToArray();
                     if (vecs.Length != vectorSize)
                         throw new FormatException("word \"" + line.First() + "\" has wrong vector size of " + vecs.Length);
