@@ -22,60 +22,81 @@ namespace Word2vec.Tools
         {
             var readerSream = new BinaryReader(inputStream);
 
-            var strHeader = new string(ASCIIEncoding.UTF8.GetChars(ReadHead(readerSream)));
+            // header
+            var strHeader = Encoding.UTF8.GetString(ReadHead(readerSream));
+            var split = strHeader.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+            if (split.Length < 2)
+                throw new FormatException("Header of binary must contain two ascii integers: vocabularySize vectorSize");
+            int vocabularySize = int.Parse(split[0]);
+            int vectorSize = int.Parse(split[1]);
 
-            var splitted = strHeader.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-            if (splitted.Length < 2)
-                throw new FormatException("header");
-
-            int vocabularySize = int.Parse(splitted[0]);
-            int vectorSize = int.Parse(splitted[1]);
-
-            var buffer = new List<byte>();
+            // body
             var ans = new List<WordRepresentation>();
+            while (true) { 
+                var rep = ReadRepresentation(readerSream, vectorSize);
+                if (rep != null) {
+                    ans.Add(rep);
+                } else {
+                    break;
+                }
+            }
 
-            while (readerSream.BaseStream.Position < readerSream.BaseStream.Length - vectorSize * sizeof(float))
-                ans.Add(ReadRepresentation(readerSream, buffer, vectorSize));
+            if (ans.Count != vocabularySize) {
+                // Give warning?
+            }
 
             return new Vocabulary(ans, vectorSize);
         }
 
-        byte[] ReadHead(BinaryReader readerSream)
+        byte[] ReadHead(BinaryReader reader)
         {
             var buffer = new List<byte>();
             while (true)
             {
-                var symbol = readerSream.ReadByte();
-                if (symbol == (int)'\n')
+                byte symbol = reader.ReadByte();
+                if (symbol == (byte)'\n')
                     break;
                 else
                     buffer.Add(symbol);
             }
             return buffer.ToArray();
         }
-        WordRepresentation ReadRepresentation(BinaryReader readerSream, List<byte> buffer, int vectorSize)
+
+        WordRepresentation ReadRepresentation(BinaryReader reader, int vectorSize)
         {
-            buffer.Clear();
-            var vectorSizeInByte = vectorSize * sizeof(float);
+            int MAX_WORD_LENGTH = 10000;
+            byte[] wordBytes = new byte[MAX_WORD_LENGTH];
+            int wordLength = 0;
 
-            while (true)
-            {
-                var symbol = readerSream.ReadByte();
-                if (symbol == (int)' ')
-                    break;
-                buffer.Add(symbol);
+            try {
+                while (true) {
+                    var symbol = reader.ReadByte();
+                    if (wordLength == 0 && symbol == (byte)'\n') {
+                        continue; // ignore newline at start of new entry
+                    } else if (symbol == (byte)' ') {
+                        break;
+                    } else if (wordLength < MAX_WORD_LENGTH) {
+                        wordBytes[wordLength++] = symbol;
+                    } else {
+                        // Or just ignore it?
+                        Console.Error.WriteLine("Warning: Maximum word length exceeded: " + MAX_WORD_LENGTH);
+                    }
+                }
+                string word = Encoding.UTF8.GetString(wordBytes,0,wordLength);
+
+                var vectorSizeInByte = vectorSize * sizeof(float);
+                var vectorBytes = reader.ReadBytes(vectorSizeInByte);
+                if (vectorBytes.Length < vectorSizeInByte) {
+                    return null; // Final entry is truncated. Give a warning?
+                }
+                var vector = new float[vectorSize];
+                Buffer.BlockCopy(vectorBytes, 0, vector, 0, vectorSizeInByte);
+
+                return new WordRepresentation(word, vector);
+
+            } catch (EndOfStreamException) {
+                return null;
             }
-            
-            
-            var word = new string(ASCIIEncoding.UTF8.GetChars(buffer.ToArray()));
-
-            var vector = new float[vectorSize];
-            Buffer.BlockCopy(readerSream.ReadBytes(vectorSizeInByte), 0, vector, 0, vectorSizeInByte);
-
-            while (readerSream.PeekChar() == (int)'\n')
-                readerSream.ReadByte();
-            
-            return new WordRepresentation(word, vector);
         }
 
     }
