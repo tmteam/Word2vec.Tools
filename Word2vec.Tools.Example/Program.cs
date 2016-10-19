@@ -16,12 +16,12 @@ namespace Word2vec.Tools.Example
             string woman = "woman";
 
             //Set an w2v bin file path there:
-           string path = @"C:\Code\Corpus\DefaultGoogleVectors.bin";
-           // string path = "C:\\Code\\Memo\\Memo.App\\bin\\Debug\\vectors.txt";
+            string path = @"C:\Code\Corpus\DefaultGoogleVectors.bin";
+            // string path = "C:\\Code\\Memo\\Memo.App\\bin\\Debug\\vectors.txt";
             var vocabulary = new Word2VecBinaryReader().Read(path);
 
             //For w2v text sampling file use:
-           // var vocabulary = new Word2VecTextReader().Read(path);
+            //var vocabulary = new Word2VecTextReader().Read(path);
 
             Console.WriteLine("vectors file: " + path);
             Console.WriteLine("vocabulary size: " + vocabulary.Words.Length);
@@ -65,11 +65,11 @@ namespace Word2vec.Tools.Example
             Console.WriteLine();
 
             #region subtraction
-			 Console.WriteLine("\""+girl+"\" - \""+boy+"\" = ...");
-             var subtractionRepresentation = vocabulary[girl].Substract(vocabulary[boy]);
-             var closestSubtractions = vocabulary.Distance(subtractionRepresentation, count);
-             foreach (var neightboor in closestSubtractions)
-                 Console.WriteLine(neightboor.Representation.Word + "\t\t" + neightboor.Distance);
+		    Console.WriteLine("\""+girl+"\" - \""+boy+"\" = ...");
+            var subtractionRepresentation = vocabulary[girl].Substract(vocabulary[boy]);
+            var closestSubtractions = vocabulary.Distance(subtractionRepresentation, count);
+            foreach (var neightboor in closestSubtractions)
+                Console.WriteLine(neightboor.Representation.Word + "\t\t" + neightboor.Distance);
             #endregion
 
             Console.WriteLine("Press any key to continue...");
