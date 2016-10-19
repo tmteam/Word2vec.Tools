@@ -47,7 +47,7 @@ namespace Word2vec.Tools.Example
 
             #region analogy
             Console.WriteLine("\""+girl+"\" relates to \""+boy+"\" as \""+woman+"\" relates to ..."); 
-            var analogies = vocabulary.Analogy("girl", "boy", "woman", count);
+            var analogies = vocabulary.Analogy(girl, boy, woman, count);
             foreach (var neightboor in analogies)
                 Console.WriteLine(neightboor.Representation.Word + "\t\t" + neightboor.Distance);
             #endregion
@@ -65,8 +65,8 @@ namespace Word2vec.Tools.Example
             Console.WriteLine();
 
             #region subtraction
-             Console.WriteLine("\"girl\" - \"boy\" = ...");
-             var subtractionRepresentation = vocabulary["girl"].Substract(vocabulary["boy"]);
+			 Console.WriteLine("\""+girl+"\" - \""+boy+"\" = ...");
+             var subtractionRepresentation = vocabulary[girl].Substract(vocabulary[boy]);
              var closestSubtractions = vocabulary.Distance(subtractionRepresentation, count);
              foreach (var neightboor in closestSubtractions)
                  Console.WriteLine(neightboor.Representation.Word + "\t\t" + neightboor.Distance);
