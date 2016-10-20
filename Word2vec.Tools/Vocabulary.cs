@@ -52,6 +52,36 @@ namespace Word2vec.Tools
         {
             return _dictioanary[word];
         }
+        /// <summary>
+        /// returns summ representation of target words. unknown words are ignored
+        /// returns null if wordOrPhrase is empty or null or if all the words are unknown
+        /// </summary>
+        public Representation GetSummRepresentationOrNullForPhrase(string wordOrPhrase)
+        {
+            if (string.IsNullOrWhiteSpace(wordOrPhrase))
+                return null;
+            wordOrPhrase = wordOrPhrase.ToLower();
+            var words = wordOrPhrase.Split(' ');
+            if (words.Length == 0)
+                return null;
+            if (words.Length == 1)
+                return GetRepresentationOrNullFor(wordOrPhrase);
+            return GetSummRepresentationOrNullForPhrase(words);
+        }
+        /// <summary>
+        /// returns summ representation of target words. unknown words are ignored
+        /// returns null if wordOrPhrase is empty or null or if all the words are unknown
+        /// </summary>
+        public Representation GetSummRepresentationOrNullForPhrase(string[] words)
+        {
+            return words
+                .Select(GetRepresentationOrNullFor)
+                .Where(w => w != null)
+                .SummOrNull();
+        }
+        /// <summary>
+        /// wraps "GetRepresentationFor" method
+        /// </summary>
         public WordRepresentation this[string word] { get { return GetRepresentationFor(word); } }
         public bool ContainsWord(string word)
         {

@@ -46,6 +46,21 @@ namespace Word2vec.Tools
             
             return new Representation(ans);
         }
+        public LinkedDistance<T>[] GetClosestFrom<T>(IEnumerable<T> representationsWrappers, Func<T, Representation> locator, int maxCount)
+        {
+            return representationsWrappers.Select(r => new LinkedDistance<T>(locator(r), r, GetCosineDistanceTo(locator(r))))
+               .OrderByDescending(s => s.Distance)
+               .Take(maxCount)
+               .ToArray();
+        }
+        public Tuple<WordDistance,T>[] GetClosestFrom<T>(IEnumerable<T> representationsWrappers, Func<T, WordRepresentation> locator, int maxCount)
+        {
+            return representationsWrappers.Select(r=>
+                new Tuple<WordDistance, T>(GetCosineDistanceToWord(locator(r)), r))
+               .OrderByDescending(s => s.Item1.Distance)
+               .Take(maxCount)
+               .ToArray();
+        }
         public WordDistance[] GetClosestFrom(IEnumerable<WordRepresentation> representations, int maxCount)
         {
             return representations.Select(GetCosineDistanceToWord)
