@@ -12,24 +12,24 @@ namespace Word2vec.Tools
         /// <summary>
         /// All known words w2v representations
         /// </summary>
-        public readonly WordRepresentation[] Words;
+        public readonly Representation[] Words;
         /// <summary>
         /// w2v words vectors dimensions count
         /// </summary>
         public int VectorDimensionsCount { get; set; }
 
-        readonly Dictionary<string, WordRepresentation> _dictioanary;
+        readonly Dictionary<string, Representation> _dictioanary;
 
-        public Vocabulary(IEnumerable<WordRepresentation> representations, int vectorDimensionsCount)
+        public Vocabulary(IEnumerable<Representation> representations, int vectorDimensionsCount)
         {
-            _dictioanary = new Dictionary<string, WordRepresentation>();
+            _dictioanary = new Dictionary<string, Representation>();
             this.VectorDimensionsCount = vectorDimensionsCount;
             foreach (var representation in representations)
             {
                 if (representation.NumericVector.Length != vectorDimensionsCount)
                     throw new ArgumentException("representations.Vector.Length");
-                if (!string.IsNullOrWhiteSpace(representation.Word) && !_dictioanary.ContainsKey(representation.Word))
-                    _dictioanary.Add(representation.Word, representation);
+                if (!string.IsNullOrWhiteSpace(representation.WordOrNull) && !_dictioanary.ContainsKey(representation.WordOrNull))
+                    _dictioanary.Add(representation.WordOrNull, representation);
             }
             Words = _dictioanary.Values.ToArray();
         }
@@ -37,7 +37,7 @@ namespace Word2vec.Tools
         /// Returns word2vec word vector if it exists.
         /// Returns null otherwise
         /// </summary>
-        public WordRepresentation GetRepresentationOrNullFor(string word)
+        public Representation GetRepresentationOrNullFor(string word)
         {
             if (ContainsWord(word))
                 return GetRepresentationFor(word);
@@ -48,7 +48,7 @@ namespace Word2vec.Tools
         /// Returns word2vec word vector if it exists.
         /// Throw otherwise
         /// </summary>
-        public WordRepresentation GetRepresentationFor(string word)
+        public Representation GetRepresentationFor(string word)
         {
             return _dictioanary[word];
         }
@@ -82,7 +82,7 @@ namespace Word2vec.Tools
         /// <summary>
         /// wraps "GetRepresentationFor" method
         /// </summary>
-        public WordRepresentation this[string word] { get { return GetRepresentationFor(word); } }
+        public Representation this[string word] { get { return GetRepresentationFor(word); } }
         public bool ContainsWord(string word)
         {
             return _dictioanary.ContainsKey(word);
@@ -91,7 +91,7 @@ namespace Word2vec.Tools
         /// <summary>
         /// returns "count" of closest words for target representation
         /// </summary>
-        public WordDistance[] Distance(Representation representation, int maxCount)
+        public DistanceTo[] Distance(Representation representation, int maxCount)
         {
             return representation.GetClosestFrom(Words.Where(v => v != representation), maxCount);
         }
@@ -100,10 +100,10 @@ namespace Word2vec.Tools
         /// if word exists - returns "count" of best fits for target word
         /// otherwise - returns empty array
         /// </summary>
-        public WordDistance[] Distance(string word, int count)
+        public DistanceTo[] Distance(string word, int count)
         {
             if (!this.ContainsWord(word))
-                return new WordDistance[0];
+                return new DistanceTo[0];
 
             return Distance(this[word], count);
          }
@@ -112,10 +112,10 @@ namespace Word2vec.Tools
         /// If all words exist - returns "count" of best fits for the result
         /// otherwise - returns empty array
         /// </summary>
-        public WordDistance[] Analogy(string wordA, string wordB, string wordC, int count)
+        public DistanceTo[] Analogy(string wordA, string wordB, string wordC, int count)
         {
             if (!ContainsWord(wordA) || !ContainsWord(wordB) || !ContainsWord(wordC))
-                return new WordDistance[0];
+                return new DistanceTo[0];
             else
                 return Analogy(GetRepresentationFor(wordA), GetRepresentationFor(wordB), GetRepresentationFor(wordC), count);
         }
@@ -123,7 +123,7 @@ namespace Word2vec.Tools
         /// If wordA is wordB, then wordC is...
         /// Returns "count" of best fits for the result
         /// </summary>
-        public WordDistance[] Analogy(Representation wordA, Representation wordB, Representation wordC, int count)
+        public DistanceTo[] Analogy(Representation wordA, Representation wordB, Representation wordC, int count)
         {
            var cummulative =  wordB.Substract(wordA).Add(wordC);
            return  cummulative.GetClosestFrom(Words.Where(t => t != wordA && t != wordB && t != wordC), count);

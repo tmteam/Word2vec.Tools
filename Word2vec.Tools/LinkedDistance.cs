@@ -8,14 +8,33 @@ namespace Word2vec.Tools
 {
     public class LinkedDistance<TLinked>
     {
+        public LinkedDistance(TLinked linkedObject, DistanceTo distance)
+        {
+            _distance = distance;
+            _linkedObject = linkedObject;
+        } 
         public LinkedDistance(Representation representation, TLinked linkedObject, double distance)
         {
-            Representation = representation;
-            Distance = distance;
-            LinkedObject = linkedObject;
+            _distance = new DistanceTo(representation, distance);
+            _linkedObject = linkedObject;
         }
-        public readonly Representation Representation;
-        public readonly double Distance;
-        public TLinked LinkedObject;
+        private readonly DistanceTo _distance;
+        private readonly TLinked _linkedObject;
+
+        public DistanceTo Distance
+        {
+            get
+            {
+                return _distance;
+            }
+        }
+
+        public TLinked LinkedObject
+        {
+            get
+            {
+                return _linkedObject;
+            }
+        }
     }
 }

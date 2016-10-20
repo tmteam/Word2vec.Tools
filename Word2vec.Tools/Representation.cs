@@ -9,62 +9,71 @@ namespace Word2vec.Tools
     /// </summary>
     public class Representation
     {
+        private readonly string _wordOrNull;
+        private readonly float[] _numericVector;
+        private readonly double _metricLength;
+        public string WordOrNull { get { return _wordOrNull; }  }
+
+        public float[] NumericVector
+        {
+            get { return _numericVector; }
+        }
+
+        public double MetricLength
+        {
+            get { return _metricLength; }
+        }
+        public Representation(string word, float[] vector)
+        {
+            _wordOrNull = word;
+            _numericVector = vector;
+            _metricLength = Math.Sqrt(_numericVector.Sum(v => v * v));
+        }
         public Representation(float[] numericVector)
         {
-            NumericVector = numericVector;
-            MetricLength = Math.Sqrt(NumericVector.Sum(v => v * v));
+            _wordOrNull = null;
+            _numericVector = numericVector;
+            _metricLength = Math.Sqrt(_numericVector.Sum(v => v * v));
         }
-        public readonly float[] NumericVector;
-        public readonly double MetricLength;
-        public WordDistance GetCosineDistanceToWord(WordRepresentation representation)
-        {
-            return new WordDistance(representation, GetCosineDistanceTo(representation));
-        }
+       
 
-        public double GetCosineDistanceTo(Representation representation)
+        public DistanceTo GetCosineDistanceTo(Representation representation)
         {
             double distance = 0;
-            for (var i = 0; i < NumericVector.Length; i++)
-                distance += NumericVector[i] * representation.NumericVector[i];
+            for (var i = 0; i < _numericVector.Length; i++)
+                distance += _numericVector[i] * representation._numericVector[i];
 
-            return distance / (MetricLength * representation.MetricLength);
+            return new DistanceTo(representation, distance / (_metricLength * representation._metricLength));
         }
         public Representation Substract(Representation representation)
         {
-            var ans = new float[NumericVector.Length];
-            for (int i = 0; i < NumericVector.Length; i++)
-                ans[i] = NumericVector[i] - representation.NumericVector[i];
+            var ans = new float[_numericVector.Length];
+            for (int i = 0; i < _numericVector.Length; i++)
+                ans[i] = _numericVector[i] - representation._numericVector[i];
             
             return new Representation(ans);
         }
         public Representation Add(Representation representation)
         {
-            var ans = new float[NumericVector.Length];
+            var ans = new float[_numericVector.Length];
             
-            for (int i = 0; i < NumericVector.Length; i++)
-                ans[i] = NumericVector[i] + representation.NumericVector[i];
+            for (int i = 0; i < _numericVector.Length; i++)
+                ans[i] = _numericVector[i] + representation._numericVector[i];
             
             return new Representation(ans);
         }
+        public DistanceTo[] GetClosestFrom(IEnumerable<Representation> representations, int maxCount)
+        {
+            return representations.Select(GetCosineDistanceTo)
+               .OrderByDescending(s => s.DistanceValue)
+               .Take(maxCount)
+               .ToArray();
+        }
         public LinkedDistance<T>[] GetClosestFrom<T>(IEnumerable<T> representationsWrappers, Func<T, Representation> locator, int maxCount)
         {
-            return representationsWrappers.Select(r => new LinkedDistance<T>(locator(r), r, GetCosineDistanceTo(locator(r))))
-               .OrderByDescending(s => s.Distance)
-               .Take(maxCount)
-               .ToArray();
-        }
-        public Tuple<WordDistance,T>[] GetClosestFrom<T>(IEnumerable<T> representationsWrappers, Func<T, WordRepresentation> locator, int maxCount)
-        {
             return representationsWrappers.Select(r=>
-                new Tuple<WordDistance, T>(GetCosineDistanceToWord(locator(r)), r))
-               .OrderByDescending(s => s.Item1.Distance)
-               .Take(maxCount)
-               .ToArray();
-        }
-        public WordDistance[] GetClosestFrom(IEnumerable<WordRepresentation> representations, int maxCount)
-        {
-            return representations.Select(GetCosineDistanceToWord)
-               .OrderByDescending(s => s.Distance)
+                new LinkedDistance<T>(r, GetCosineDistanceTo(locator(r))))
+               .OrderByDescending(s => s.Distance.DistanceValue)
                .Take(maxCount)
                .ToArray();
         }
