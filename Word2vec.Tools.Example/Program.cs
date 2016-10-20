@@ -16,21 +16,14 @@ namespace Word2vec.Tools.Example
             string girl  = "girl";
             string woman = "woman";
 
-
             Console.WriteLine("Reading the model...");
 
-            var path = @"E:\Code\memobot\Memo.App\bin\Debug\minicatVectors.txt";
-
-            //Set an w2v bin file path there:
-            // string path = @"C:\Code\Corpus\DefaultGoogleVectors.bin";
+            //Set your w2v bin file path here:
+            var path = @"C:\Vectors.bin";
             var vocabulary = new Word2VecBinaryReader().Read(path);
 
             //For w2v text sampling file use:
             //var vocabulary = new Word2VecTextReader().Read(path);
-
-            // or
-            // var vocabulary = new Word2VecTextReader().Read(
-            //     new StreamReader(path, Encoding.ASCII));
 
             Console.WriteLine("vectors file: " + path);
             Console.WriteLine("vocabulary size: " + vocabulary.Words.Length);
