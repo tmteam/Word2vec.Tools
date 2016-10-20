@@ -12,12 +12,12 @@ namespace Word2vec.Tools.Example
     {
         static void Main(string[] args)
         {
-            string boy   = "мальчик";
-            string girl  = "девочка";
-            string woman = "женщина";
+            string boy   = "boy";
+            string girl  = "girl";
+            string woman = "woman";
 
 
-            Console.WriteLine("Reading model...");
+            Console.WriteLine("Reading the model...");
 
             var path = @"E:\Code\memobot\Memo.App\bin\Debug\minicatVectors.txt";
 
@@ -28,9 +28,7 @@ namespace Word2vec.Tools.Example
             //For w2v text sampling file use:
             //var vocabulary = new Word2VecTextReader().Read(path);
 
-            
-
-
+            // or
             // var vocabulary = new Word2VecTextReader().Read(
             //     new StreamReader(path, Encoding.ASCII));
 
@@ -41,7 +39,7 @@ namespace Word2vec.Tools.Example
             Console.WriteLine();
 
             int count = 7;
-            /*
+            
             #region distance
             
             Console.WriteLine("top "+count+" closest to \""+ boy+"\" words:");
@@ -82,15 +80,6 @@ namespace Word2vec.Tools.Example
             foreach (var neightboor in closestSubtractions)
                 Console.WriteLine(neightboor.Representation.WordOrNull + "\t\t" + neightboor.DistanceValue);
             #endregion
-            */
-            #region outstanding
-            // Console.WriteLine("\"" + girl + "\" - \"" + boy + "\" = ...");
-            var outstanding = new[] {"я", "хочу","купить","эту","долбаную","кружку","пряма","сейчас"}.Select(s => vocabulary[s]).GetMostOutstandings(8);
-            foreach (var neightboor in outstanding)
-                Console.WriteLine("Most outstanding is: \""+ neightboor.Representation.WordOrNull+"\"");
-            #endregion
-
-
 
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();

@@ -30,36 +30,5 @@ namespace Word2vec.Tools
                 ans = ans == null ? representation : ans.Add(representation);
             return ans;
         }
-
-        /// <summary>
-        /// returns most outstanding word in the phrase using projection
-        /// </summary>
-        public static LinkedDistance<T> GetMostOutstanding<T>(this IEnumerable<T> representationsWrappers, Func<T, Representation> locator )
-        {
-            var summ = representationsWrappers.Select(locator).Summ();
-
-            return representationsWrappers
-                .Select(r => new LinkedDistance<T>(r, summ.GetCosineDistanceTo(locator(r))))
-                .OrderByDescending(r => r.Distance.DistanceValue)
-                .First();
-        }
-
-        /// <summary>
-        /// returns most outstanding word in the phrase 
-        /// </summary>
-        public static DistanceTo GetMostOutstanding(this IEnumerable<Representation> representations)
-        {
-            var summ = representations.Summ();
-            return representations.Select(r => summ.GetCosineDistanceTo(r)).OrderByDescending(r => r.DistanceValue).First();
-        }
-
-        /// <summary>
-        /// returns several most outstanding words in the phrase 
-        /// </summary>
-        public static DistanceTo[] GetMostOutstandings(this IEnumerable<Representation> representations, int maxCount)
-        {
-            var summ = representations.Summ();
-            return representations.Select(r => summ.GetCosineDistanceTo(r)).OrderByDescending(r => r.DistanceValue).Take(maxCount).ToArray();
-        }
     }
 }
