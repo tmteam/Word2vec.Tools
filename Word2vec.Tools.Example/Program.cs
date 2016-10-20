@@ -10,28 +10,26 @@ namespace Word2vec.Tools.Example
 {
     class Program
     {
+        /// <summary>
+        /// Api 1.x.x 
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
-            string boy   = "мальчик";
-            string girl  = "девочка";
-            string woman = "женщина";
+            string boy   = "boy";
+            string girl  = "girl";
+            string woman = "woman";
 
+            //You may start to search this train model there : https://github.com/eyaler/word2vec-slim
+            var path = @"C:\Code\Vectors.bin";
 
-            var path = @"E:\Code\memobot\Memo.App\bin\Debug\minicatVectors.txt";
-
-            //Set an w2v bin file path there:
+            // Set an w2v bin file path there:
             // string path = @"C:\Code\Corpus\DefaultGoogleVectors.bin";
-             var vocabulary = new Word2VecBinaryReader().Read(path);
+            var vocabulary = new Word2VecBinaryReader().Read(path);
 
             //For w2v text sampling file use:
             //var vocabulary = new Word2VecTextReader().Read(path);
-
             
-
-
-            // var vocabulary = new Word2VecTextReader().Read(
-            //     new StreamReader(path, Encoding.ASCII));
-
             Console.WriteLine("vectors file: " + path);
             Console.WriteLine("vocabulary size: " + vocabulary.Words.Length);
             Console.WriteLine("w2v vector dimensions count: " + vocabulary.VectorDimensionsCount);
@@ -45,9 +43,9 @@ namespace Word2vec.Tools.Example
             Console.WriteLine("top "+count+" closest to \""+ boy+"\" words:");
             var closest = vocabulary.Distance(boy, count);
 
-            /* Is simmilar to:
-            * var closest = vocabulary[boy].GetClosestFrom(vocabulary.Words.Where(w => w != vocabulary[boy]), count);
-            */ 
+            // Is simmilar to:
+            // var closest = vocabulary[boy].GetClosestFrom(vocabulary.Words.Where(w => w != vocabulary[boy]), count);
+            
             foreach (var neightboor in closest)
                 Console.WriteLine(neightboor.Representation.Word + "\t\t" + neightboor.Distance);
             #endregion
