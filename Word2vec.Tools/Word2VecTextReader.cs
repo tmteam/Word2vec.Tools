@@ -18,7 +18,7 @@ namespace Word2vec.Tools
             bool isFirstLine = true;
             int vectorSize = -1;
 
-            var vectors = new List<WordRepresentation>();
+            var vectors = new List<Representation>();
 
             var enUsCulture = CultureInfo.GetCultureInfo("en-US");
             while (!inputStream.EndOfStream)
@@ -34,7 +34,7 @@ namespace Word2vec.Tools
                             //header
                             vocabularySize = int.Parse(line[0]);
                             vectorSize = int.Parse(line[1]);
-                            vectors = new List<WordRepresentation>(vocabularySize);
+                            vectors = new List<Representation>(vocabularySize);
                             continue;
                         }
                         catch
@@ -57,7 +57,7 @@ namespace Word2vec.Tools
                 if (vecs.Length != vectorSize)
                     throw new FormatException("word \"" + line.First() + "\" has wrong vector size of " + vecs.Length);
 
-                vectors.Add(new WordRepresentation(
+                vectors.Add(new Representation(
                    word: line.First(),
                    vector: vecs.Select(v => Single.Parse(v, enUsCulture)).ToArray()));
             }

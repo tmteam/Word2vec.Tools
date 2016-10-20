@@ -31,7 +31,7 @@ namespace Word2vec.Tools
             int vectorSize = int.Parse(split[1]);
 
             // body
-            var ans = new List<WordRepresentation>();
+            var ans = new List<Representation>();
             
             var buffer = new List<byte>(); //allocation optimization
 
@@ -62,7 +62,7 @@ namespace Word2vec.Tools
             return buffer.ToArray();
         }
 
-        static WordRepresentation ReadRepresentation(BinaryReader reader, List<byte> buffer, int vectorSize)
+        static Representation ReadRepresentation(BinaryReader reader, List<byte> buffer, int vectorSize)
         {
 
             buffer.Clear();
@@ -87,7 +87,7 @@ namespace Word2vec.Tools
             var vector = new float[vectorSize];
             Buffer.BlockCopy(vectorBytes, 0, vector, 0, vectorSizeInByte);
 
-            return new WordRepresentation(word, vector);
+            return new Representation(word, vector);
 
         }
 
