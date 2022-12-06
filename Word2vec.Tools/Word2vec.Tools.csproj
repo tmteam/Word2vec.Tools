@@ -2,17 +2,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>2.1.0</PackageVersion>
     <Version>0.9.8</Version>
     <LangVersion>10</LangVersion>
     <Copyright>Copyright 2022</Copyright>
     <PackageProjectUrl>https://github.com/tmteam/Word2vec.Tools</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/tmteam/Word2vec.Tools/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/tmteam/Word2vec.Tools</RepositoryUrl>
-    <PackageReleaseNotes>Minor bugs fixed. ip type support</PackageReleaseNotes>
+    <PackageReleaseNotes>Move to net core </PackageReleaseNotes>
     <TargetFrameworks>net5.0;net6.0;netstandard2.0</TargetFrameworks>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>Word2Vec tools</Title>
+    <Description>.Net Implementation of w2v for those who want to use goolglr word2vec tools in theirs .net solutions. See github page for easy start.</Description>
+    <PackageTags>nlp, machine-learning</PackageTags>
   </PropertyGroup>
 
 </Project>
