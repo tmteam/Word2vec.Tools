@@ -1,14 +1,13 @@
 ﻿
-namespace Word2vec.Tools
+namespace Word2vec.Tools;
+
+public class WordDistance
 {
-    public class WordDistance
+    public WordDistance(WordRepresentation representation, double distance)
     {
-        public WordDistance(WordRepresentation representation, double distance)
-        {
-            Representation = representation;
-            Distance = distance;
-        }
-        public  readonly WordRepresentation Representation;
-        public readonly double Distance;
+        Representation = representation;
+        Distance = distance;
     }
+    public readonly WordRepresentation Representation;
+    public readonly double Distance;
 }
